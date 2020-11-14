@@ -48,8 +48,6 @@ app.delete('/orders/:id', (req, res) => {
         orders.splice(orderIndex, 1);
     }
     res.status(200).send(orders)
-    
-
     /* for (let order of orders) {
         if (order.id == id) {
           orders.splice(orders.indexOf(order), 1);
@@ -63,6 +61,32 @@ app.delete('/orders/:id', (req, res) => {
       res.status(404).json({ message: "Invalid Order Id" });
 })
 
+app.get("/orders/:id", (req, res) => {
+    const id = req.params.id;
+    let order = orders.find((order) => {
+        return order.id === Number(id)
+    });
+
+    const filter = req.body.filter || [];
+    if (filter.length) {
+        let newOrder = {};
+        filter.forEach((f) => {
+            newOrder[f] = order[f]
+        })
+        res.send(newOrder)
+    }
+
+    
+
+    res.send(order.customer_name)
+})
+
+// example endpoint: /search?q="search term here"
+app.get('/search', (req, res) => {
+    let query = req.query.q
+    res.send(query)
+})
+
 app.get("*", (req, res) => {
     res.status(404).send("Not found")
 })
@@ -71,3 +95,4 @@ app.get("*", (req, res) => {
 app.listen(port, () => {
     console.log('Server listening')
 })
+
